@@ -1,4 +1,4 @@
-const backendUrl = '<SEU_RENDER_URL>'; // Ex.: https://lembrete-medicamentos.onrender.com
+const backendUrl = 'https://lembrete-medicamentos-backend.onrender.com'; // Exemplo, use o seu URL
 
 async function carregarMedicamentos() {
     const response = await fetch(`${backendUrl}/lembretes`);
