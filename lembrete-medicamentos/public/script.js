@@ -1,5 +1,7 @@
+const backendUrl = '<SEU_RENDER_URL>'; // Ex.: https://lembrete-medicamentos.onrender.com
+
 async function carregarMedicamentos() {
-    const response = await fetch('/lembretes');
+    const response = await fetch(`${backendUrl}/lembretes`);
     const lembretes = await response.json();
     const ul = document.getElementById('medicamentos');
     ul.innerHTML = '';
@@ -15,7 +17,7 @@ async function carregarMedicamentos() {
 }
 
 async function exibirLinks() {
-    const response = await fetch('/links');
+    const response = await fetch(`${backendUrl}/links`);
     const links = await response.json();
     const div = document.getElementById('listaLinks');
     div.innerHTML = links.map(l => `<p>${l.horario}: <a href="${l.link}" target="_blank">Enviar para ${l.whatsapp}</a></p>`).join('');
@@ -51,7 +53,7 @@ document.getElementById('medForm').addEventListener('submit', (e) => {
     document.getElementById('confirmar').onclick = async () => {
         const data = { whatsapp, medicamento, horarios: horarios.join(',') };
         try {
-            const response = await fetch('/cadastrar', {
+            const response = await fetch(`${backendUrl}/cadastrar`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(data)
@@ -71,13 +73,13 @@ document.getElementById('medForm').addEventListener('submit', (e) => {
 });
 
 async function removerMedicamento(id) {
-    await fetch(`/remover/${id}`, { method: 'DELETE' });
+    await fetch(`${backendUrl}/remover/${id}`, { method: 'DELETE' });
     carregarMedicamentos();
     document.getElementById('mensagem').textContent = 'Medicamento removido!';
 }
 
 async function editarMedicamento(id) {
-    const response = await fetch('/lembretes');
+    const response = await fetch(`${backendUrl}/lembretes`);
     const lembretes = await response.json();
     const lembrete = lembretes.find(l => l.id === id);
 
@@ -86,9 +88,9 @@ async function editarMedicamento(id) {
     document.getElementById('frequencia').value = lembrete.horarios.split(',').length;
     document.getElementById('horarioInicial').value = lembrete.horarios.split(',')[0].replace(':', '');
 
-    await fetch(`/remover/${id}`, { method: 'DELETE' });
+    await fetch(`${backendUrl}/remover/${id}`, { method: 'DELETE' });
     document.getElementById('mensagem').textContent = 'Edite os dados e clique em Calcular Horários.';
 }
 
 carregarMedicamentos();
-setInterval(exibirLinks, 60000); // Atualiza links a cada minuto
+setInterval(exibirLinks, 60000);

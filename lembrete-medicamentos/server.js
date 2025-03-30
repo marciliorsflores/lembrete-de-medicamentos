@@ -5,7 +5,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*'); // Permite acesso do GitHub Pages
+    res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    next();
+});
 
 const db = new sqlite3.Database('lembretes.db');
 db.run('CREATE TABLE IF NOT EXISTS lembretes (id INTEGER PRIMARY KEY AUTOINCREMENT, whatsapp TEXT, medicamento TEXT, horarios TEXT)');
